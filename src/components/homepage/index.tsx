@@ -1,14 +1,14 @@
 import { useFieldArray, useForm } from 'react-hook-form'
 
 interface Card {
-    id:string;
-  title: string;
-  image: FileList | null | {url: string, alt: string};
+    id: string;
+    title: string;
+    image: FileList | null | { url: string, alt: string };
 }
 
 interface FormValues {
-  title: string;
-  cards: Card[];
+    title: string;
+    cards: Card[];
 }
 
 function Homepage() {
@@ -18,18 +18,18 @@ function Homepage() {
             title: '',
             cards: [
                 {
-                    id:'68c160daf366522beed3ff98',
+                    id: '68c160daf366522beed3ff98',
                     title: 'Example one',
                     image: {
-                        url: "ur;/sada/",
+                        url: "url/example",
                         alt: 'alternative text'
                     }
                 },
                 {
                     id: '68c160daf366522beed3ff99',
-                    title: 'Example twp',
+                    title: 'Example two',
                     image: {
-                        url: "ur;/sasasdasdasdasd/",
+                        url: "url/example",
                         alt: 'alternative text second'
                     }
                 }
@@ -37,55 +37,55 @@ function Homepage() {
         }
     });
 
-   const {fields} =  useFieldArray({
+    const { fields } = useFieldArray({
         control: control,
         name: 'cards'
     })
 
 
     const onSubmit = (data: FormValues) => {
-        console.log('Sending only',{title: data.title})
+        console.log('Sending only', { title: data.title })
     }
 
     const handleCardSubmit = async (cardIndex: number) => {
-        const {id} = getValues().cards[cardIndex];
+        const { id } = getValues().cards[cardIndex];
 
         const formdata = new FormData();
 
 
-        for( const [key, value] of Object.entries(getValues().cards[cardIndex])){
-            if(value instanceof FileList){
-                console.log(1)
+        for (const [key, value] of Object.entries(getValues().cards[cardIndex])) {
+
+            if (value instanceof FileList) {
                 formdata.set(key, value[0])
                 continue
             }
 
-            if(key === 'image') continue
-             console.log(2, key)
-            formdata.set(key,value)
+            if (key === 'image') continue
+
+            formdata.set(key, value)
 
         }
 
-        try{
-           const res =  await fetch(`${import.meta.env.REACT_APP_API_URL}/api/data/home/card/${id}`,{
+        try {
+            const res = await fetch(`${import.meta.env.REACT_APP_API_URL}/api/data/home/card/${id}`, {
                 method: 'PUT',
                 body: formdata,
                 headers: {
-                    'contentType':'application/json',
-                    'authorization':`Bearer ${import.meta.env.REACT_APP_BEARER}`
+                    'contentType': 'application/json',
+                    'authorization': `Bearer ${import.meta.env.REACT_APP_BEARER}`
                 }
             })
 
-            if(!res.ok){
+            if (!res.ok) {
                 const error = await res.json();
                 throw new Error(error?.message)
             }
-            const data =  await res.json()
-            console.log('res 2',data)
+            const data = await res.json()
+            console.log('res 2', data)
 
             reset()
-        }catch(error){
-                 console.log(error )
+        } catch (error) {
+            console.log(error)
         }
 
     }
@@ -101,8 +101,8 @@ function Homepage() {
             <ul>
                 {fields.map((field, index) => {
 
-                   const {isDirty: isTitleDirty} = getFieldState(`cards.${index}.title`,formState)
-                   const {isDirty: isImageDirty} = getFieldState(`cards.${index}.image.url`,formState)
+                    const { isDirty: isTitleDirty } = getFieldState(`cards.${index}.title`, formState)
+                    const { isDirty: isImageDirty } = getFieldState(`cards.${index}.image.url`, formState)
 
                     const isDisabled = isTitleDirty === false && isImageDirty === false;
 
