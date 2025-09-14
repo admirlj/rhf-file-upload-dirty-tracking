@@ -13,6 +13,10 @@ let router = createBrowserRouter([
   },
 ]);
 
-ReactDOM.createRoot(root).render(
-  <RouterProvider router={router} />,
-);
+const root = document.getElementById('root');
+
+if (root) {
+  ReactDOM.createRoot(root).render(
+    <RouterProvider router={router} />,
+  );
+}
