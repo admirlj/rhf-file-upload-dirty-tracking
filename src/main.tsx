@@ -3,7 +3,7 @@ import {
   RouterProvider,
 } from "react-router";
 import Homepage from "./components/homepage";
-import ReactDOM from "react-dom/client";
+import { createRoot } from "react-dom/client";
 
 let router = createBrowserRouter([
   {
@@ -13,10 +13,8 @@ let router = createBrowserRouter([
   },
 ]);
 
-const root = document.getElementById('root');
+const reactRoot = createRoot(document.getElementById('root')!);
 
-if (root) {
-  ReactDOM.createRoot(root).render(
-    <RouterProvider router={router} />,
-  );
-}
+reactRoot.render(
+  <RouterProvider router={router} />
+)
